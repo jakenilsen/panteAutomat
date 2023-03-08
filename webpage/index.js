@@ -5,9 +5,16 @@ function insertCan() {
 
     xmlHttp.open("POST", "http://localhost:8080/cans", false); // false for synchronous request
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+
     xmlHttp.send(null);
 
-    document.getElementById("welcomeText").innerHTML = xmlHttp.responseText;
+    // 202 ACCEPTED for successfully inserting a can
+    if (xmlHttp.status == 202) {
+        document.getElementById("welcomeText").innerHTML = xmlHttp.responseText;
+    } else {
+        document.getElementById("welcomeText").innerHTML = "Error: " + xmlHttp.responseText;
+    }
+
     amountRecycled();
 }
 
@@ -18,7 +25,13 @@ function insertBottle() {
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
     xmlHttp.send(null);
 
-    document.getElementById("welcomeText").innerHTML = xmlHttp.responseText;
+    // 202 ACCEPTED for successfully inserting a bottle
+    if (xmlHttp.status == 202) {
+        document.getElementById("welcomeText").innerHTML = xmlHttp.responseText;
+    } else {
+        document.getElementById("welcomeText").innerHTML = "Error: " + xmlHttp.responseText;
+    }
+
     amountRecycled();
 }
 
@@ -29,7 +42,12 @@ function amountRecycled() {
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
     xmlHttp.send(null);
 
-    document.getElementById("amountRecycled").innerHTML = xmlHttp.responseText;
+    // 200 OK for successfully fetching amount recycled
+    if (xmlHttp.status == 200) {
+        document.getElementById("amountRecycled").innerHTML = xmlHttp.responseText;
+    } else {
+        document.getElementById("amountRecycled").innerHTML = "Error: " + xmlHttp.responseText;
+    }
 }
 
 function printVoucher() {
@@ -39,5 +57,10 @@ function printVoucher() {
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
     xmlHttp.send(null);
 
-    document.getElementById("amountRecycled").innerHTML = xmlHttp.responseText;
+    // 200 OK for successfully printing voucher
+    if (xmlHttp.status == 200) {
+        document.getElementById("amountRecycled").innerHTML = xmlHttp.responseText;
+    } else {
+        document.getElementById("amountRecycled").innerHTML = "Error: " + xmlHttp.responseText;
+    }
 }

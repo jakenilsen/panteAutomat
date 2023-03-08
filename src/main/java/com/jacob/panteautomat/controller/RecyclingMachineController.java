@@ -1,6 +1,8 @@
 package com.jacob.panteautomat.controller;
 
 import com.jacob.panteautomat.service.RecyclingMachineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,31 +10,45 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(maxAge = 3600)
 public class RecyclingMachineController {
 
+    Logger logger = LoggerFactory.getLogger(RecyclingMachineController.class);
+
     private final RecyclingMachineService recyclingMachineService = new RecyclingMachineService();
 
 
     @PostMapping("/cans")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public String insertCan() {
-        System.out.println("can");
+        String canMessage = "Can inserted. ";
+
         recyclingMachineService.insertCan();
-        return "Can inserted";
+
+        logger.info(canMessage + recyclingMachineService.getRecycledAmount());
+        return canMessage;
     }
     @PostMapping("/bottles")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public String insertBottle() {
-        System.out.println("bottle");
+        String bottleMessage = "Bottle inserted. ";
+
         recyclingMachineService.insertBottle();
-        return "Bottle inserted";
+
+        logger.info(bottleMessage + recyclingMachineService.getRecycledAmount());
+        return bottleMessage;
     }
 
     @GetMapping("/recycledamount")
+    @ResponseStatus(code = HttpStatus.OK)
     public String getRecycledAmount() {
         return recyclingMachineService.getRecycledAmount();
     }
 
     @GetMapping("/printvoucher")
+    @ResponseStatus(code = HttpStatus.OK)
     public String printVoucher() {
-        return recyclingMachineService.printVoucher();
+        String voucherText = recyclingMachineService.printVoucher();
+
+        logger.info("Printed voucher: " + voucherText);
+        logger.info("Recycling Machine is cleared: " + recyclingMachineService.getRecycledAmount());
+        return voucherText;
     }
 }

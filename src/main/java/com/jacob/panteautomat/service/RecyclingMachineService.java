@@ -30,7 +30,7 @@ public class RecyclingMachineService {
                 numberOfBottles++;
             }
         }
-        return String.format("You have recycled %d can(s) and %d bottle(s).", numberOfCans, numberOfBottles);
+        return String.format("%d can(s) and %d bottle(s) have been added to the recycling machine.", numberOfCans, numberOfBottles);
     }
 
      private int calculateRecycledValue() {
@@ -49,12 +49,9 @@ public class RecyclingMachineService {
     }
 
     public String printVoucher() {
-        return String.format("%s You will receive a voucher of %d kr!", getRecycledAmount(), calculateRecycledValue());
+        String voucherText = String.format("%s You will receive a voucher of %d kr!", getRecycledAmount(), calculateRecycledValue());
+
+        recycledObjects.clear();
+        return voucherText;
     }
-
-
-
-//    public List insertBottle() {
-//
-//    }
 }
