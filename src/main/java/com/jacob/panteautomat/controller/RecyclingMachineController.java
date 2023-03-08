@@ -47,8 +47,12 @@ public class RecyclingMachineController {
     public String printVoucher() {
         String voucherText = recyclingMachineService.printVoucher();
 
-        logger.info("Printed voucher: " + voucherText);
-        logger.info("Recycling Machine is cleared: " + recyclingMachineService.getRecycledAmount());
         return voucherText;
+    }
+
+    @GetMapping("/voucherhistory")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String getVoucherHistory() {
+        return recyclingMachineService.getVoucherHistory();
     }
 }

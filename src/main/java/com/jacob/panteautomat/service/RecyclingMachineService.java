@@ -2,14 +2,22 @@ package com.jacob.panteautomat.service;
 
 import com.jacob.panteautomat.model.Bottle;
 import com.jacob.panteautomat.model.Can;
+import com.jacob.panteautomat.model.VoucherHistory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class RecyclingMachineService {
 
+    Logger logger = LoggerFactory.getLogger(RecyclingMachineService.class);
     private ArrayList<Object> recycledObjects = new ArrayList<>();
+
+    private ArrayList<VoucherHistory> voucherHistory = new ArrayList<>();
 
     public void insertCan() {
         recycledObjects.add(new Can());
@@ -49,9 +57,30 @@ public class RecyclingMachineService {
     }
 
     public String printVoucher() {
+        if (calculateRecycledValue() == 0) {
+            logger.warn("User has not added any recycleable objects to the machine!");
+            return "You have not added any recycleable objects to the machine!";
+        }
         String voucherText = String.format("%s You will receive a voucher of %d kr!", getRecycledAmount(), calculateRecycledValue());
+        logger.info("Printed voucher: " + voucherText);
+
+        voucherHistory.add(new VoucherHistory(voucherText, new Date()));
+        logger.info("Added voucher to history");
 
         recycledObjects.clear();
+        logger.info("Recycling Machine is cleared: " + getRecycledAmount());
+
         return voucherText;
+    }
+
+    public String getVoucherHistory() {
+        String voucherHistoryString = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        for (VoucherHistory vh: voucherHistory) {
+            voucherHistoryString += String.format("%s: %s\n", dateFormat.format(vh.getDate()), vh.getVoucherText());
+        }
+
+        return voucherHistoryString;
     }
 }

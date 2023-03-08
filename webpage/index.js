@@ -64,3 +64,18 @@ function printVoucher() {
         document.getElementById("amountRecycled").innerHTML = "Error: " + xmlHttp.responseText;
     }
 }
+
+    function showVoucherHistory() {
+        const xmlHttp = new XMLHttpRequest();
+
+        xmlHttp.open("GET", "http://localhost:8080/voucherhistory", false); // false for synchronous request
+        xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+        xmlHttp.send(null);
+
+        // 200 OK for successfully printing voucher
+        if (xmlHttp.status == 200) {
+            document.getElementById("voucherHistory").innerHTML = xmlHttp.responseText;
+        } else {
+            document.getElementById("voucherHistory").innerHTML = "Error: " + xmlHttp.responseText;
+        }
+}
