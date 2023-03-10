@@ -1,6 +1,7 @@
 package com.jacob.panteautomat.controller;
 
 import com.jacob.panteautomat.service.RecyclingMachineService;
+import com.jacob.panteautomat.utils.RecyclableObjects;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +25,7 @@ public class RecyclingMachineControllerTest {
     @Test
     public void insertOneCanShouldInsertCanSuccessfully() throws Exception {
         Thread.sleep(500);
-        this.mockMvc.perform(post("/cans"))
+        this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
                 .andDo(print())
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Can inserted.")));
@@ -33,7 +34,7 @@ public class RecyclingMachineControllerTest {
     @Test
     public void insertOneBottleShouldInsertBottleSuccessfully() throws Exception {
         Thread.sleep(1000);
-        this.mockMvc.perform(post("/bottles"))
+        this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andDo(print())
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Bottle inserted.")));
@@ -42,10 +43,10 @@ public class RecyclingMachineControllerTest {
     @Test
     public void insertSecondCanTooFastShouldReturnErrorMessage() throws Exception {
         Thread.sleep(500);
-        this.mockMvc.perform(post("/cans"))
+        this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Can inserted.")));
-        this.mockMvc.perform(post("/cans"))
+        this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
                 .andExpect(status().isTooManyRequests())
                 .andExpect(content().string(containsString("You inserted a can too fast!")));
     }
@@ -53,21 +54,21 @@ public class RecyclingMachineControllerTest {
     @Test
     public void insertSecondBottleTooFastShouldReturnErrorMessage() throws Exception {
         Thread.sleep(1000);
-        this.mockMvc.perform(post("/bottles"))
+        this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Bottle inserted.")));
-        this.mockMvc.perform(post("/bottles"))
+        this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andExpect(status().isTooManyRequests())
                 .andExpect(content().string(containsString("You inserted a bottle too fast!")));
     }
     @Test
     public void insertSecondCanAfterHalfASecondShouldSucceed() throws Exception {
         Thread.sleep(500);
-        this.mockMvc.perform(post("/cans"))
+        this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Can inserted.")));
         Thread.sleep(500);
-        this.mockMvc.perform(post("/cans"))
+        this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Can inserted.")));
     }
@@ -75,11 +76,11 @@ public class RecyclingMachineControllerTest {
     @Test
     public void insertSecondBottleAfterHalfASecondShouldSucceed() throws Exception {
         Thread.sleep(1000);
-        this.mockMvc.perform(post("/bottles"))
+        this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Bottle inserted.")));
         Thread.sleep(1000);
-        this.mockMvc.perform(post("/bottles"))
+        this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Bottle inserted.")));
     }

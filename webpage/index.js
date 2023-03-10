@@ -5,6 +5,7 @@ function insertCan() {
 
     xmlHttp.open("POST", "http://localhost:8080/cans", false); // false for synchronous request
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+    xmlHttp.setRequestHeader("objectType", document.activeElement.name);
 
     xmlHttp.send(null);
 
@@ -23,6 +24,7 @@ function insertBottle() {
 
     xmlHttp.open("POST", "http://localhost:8080/bottles", false); // false for synchronous request
     xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+    xmlHttp.setRequestHeader("objectType", document.activeElement.name);
     xmlHttp.send(null);
 
     // 202 ACCEPTED for successfully inserting a bottle
