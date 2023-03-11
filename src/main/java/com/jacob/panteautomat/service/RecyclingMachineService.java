@@ -29,7 +29,7 @@ public class RecyclingMachineService {
         recycledObjects.add(new Bottle());
     }
 
-    private Map<String, Integer> getRecycledAmount() {
+    public Map<String, Integer> getRecycledAmount() {
         Map<String, Integer> numberOfRecycledObjects = new HashMap();
 
         for (Object o: recycledObjects) {
@@ -51,7 +51,7 @@ public class RecyclingMachineService {
                 numberOfRecycledObjects.getOrDefault(RecyclableObjects.BOTTLE.getString(), 0));
     }
 
-     private int calculateRecycledValue() {
+     public int calculateRecycledValue() {
         int totalValueOfCans = 0;
         int totalValueOfBottles = 0;
 

@@ -2,7 +2,10 @@ package com.jacob.panteautomat.controller;
 
 import com.jacob.panteautomat.service.RecyclingMachineService;
 import com.jacob.panteautomat.utils.RecyclableObjects;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @WebMvcTest(RecyclingMachineController.class)
 public class RecyclingMachineControllerTest {
     @Autowired
@@ -23,8 +27,8 @@ public class RecyclingMachineControllerTest {
     private RecyclingMachineService service;
 
     @Test
+    @Order(1)
     public void insertOneCanShouldInsertCanSuccessfully() throws Exception {
-        Thread.sleep(500);
         this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
                 .andDo(print())
                 .andExpect(status().isAccepted())
@@ -32,8 +36,8 @@ public class RecyclingMachineControllerTest {
     }
 
     @Test
+    @Order(2)
     public void insertOneBottleShouldInsertBottleSuccessfully() throws Exception {
-        Thread.sleep(1000);
         this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andDo(print())
                 .andExpect(status().isAccepted())
@@ -41,6 +45,7 @@ public class RecyclingMachineControllerTest {
     }
 
     @Test
+    @Order(3)
     public void insertSecondCanTooFastShouldReturnErrorMessage() throws Exception {
         Thread.sleep(500);
         this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
@@ -52,6 +57,7 @@ public class RecyclingMachineControllerTest {
     }
 
     @Test
+    @Order(4)
     public void insertSecondBottleTooFastShouldReturnErrorMessage() throws Exception {
         Thread.sleep(1000);
         this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
@@ -62,6 +68,7 @@ public class RecyclingMachineControllerTest {
                 .andExpect(content().string(containsString("You inserted a bottle too fast!")));
     }
     @Test
+    @Order(5)
     public void insertSecondCanAfterHalfASecondShouldSucceed() throws Exception {
         Thread.sleep(500);
         this.mockMvc.perform(post("/cans").header("objectType", RecyclableObjects.CAN.getString()))
@@ -74,6 +81,7 @@ public class RecyclingMachineControllerTest {
     }
 
     @Test
+    @Order(6)
     public void insertSecondBottleAfterHalfASecondShouldSucceed() throws Exception {
         Thread.sleep(1000);
         this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
@@ -83,5 +91,15 @@ public class RecyclingMachineControllerTest {
         this.mockMvc.perform(post("/bottles").header("objectType", RecyclableObjects.BOTTLE.getString()))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Bottle inserted.")));
+    }
+
+    @Test
+    @Order(7)
+    public void postWithoutHeaderShouldReturnForbidden() throws Exception {
+        Thread.sleep(500);
+        this.mockMvc.perform(post("/cans"))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(content().string(containsString("Missing requestheader 'objectType'")));
     }
 }
