@@ -36,6 +36,23 @@ function insertBottle() {
 
     amountRecycled();
 }
+function insertBasicObject() {
+    const xmlHttp = new XMLHttpRequest();
+
+    xmlHttp.open("POST", "http://localhost:8080/basicobject", false); // false for synchronous request
+    xmlHttp.setRequestHeader("Access-Control-Allow-Origin", '*');
+    xmlHttp.setRequestHeader("objectType", document.activeElement.name);
+    xmlHttp.send(null);
+
+    // 202 ACCEPTED for successfully inserting a bottle
+    if (xmlHttp.status == 202) {
+        document.getElementById("welcomeText").innerHTML = xmlHttp.responseText;
+    } else {
+        document.getElementById("welcomeText").innerHTML = "Error: " + xmlHttp.responseText;
+    }
+
+    amountRecycled();
+}
 
 function amountRecycled() {
     const xmlHttp = new XMLHttpRequest();

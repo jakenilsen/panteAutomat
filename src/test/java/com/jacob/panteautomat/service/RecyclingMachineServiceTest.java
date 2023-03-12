@@ -43,6 +43,7 @@ public class RecyclingMachineServiceTest {
         recyclingMachineService.insertCan(); // 2kr
         recyclingMachineService.insertBottle(); // 3kr
         recyclingMachineService.insertCan(); // 2kr
+        recyclingMachineService.insertBasicObject(); // 0kr
 
         Assertions.assertEquals(expected, recyclingMachineService.calculateRecycledValue());
     }

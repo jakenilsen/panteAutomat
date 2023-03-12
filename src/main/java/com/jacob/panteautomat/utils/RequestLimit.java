@@ -12,7 +12,7 @@ public class RequestLimit {
         BASICOBJECT {
             @Override
             public Bandwidth getLimit() {
-                return Bandwidth.classic(1, Refill.intervally(1, Duration.ofSeconds(5)));
+                return Bandwidth.classic(1, Refill.intervally(1, Duration.ofSeconds(2)));
             }
         },
         BOTTLE {

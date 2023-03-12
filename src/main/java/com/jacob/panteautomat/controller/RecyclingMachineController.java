@@ -49,6 +49,21 @@ public class RecyclingMachineController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("You inserted a bottle too fast!");
     }
 
+    @PostMapping("/basicobject")
+    public ResponseEntity insertBasicObject(@RequestHeader(value = "objectType") String objectType) {
+        Bucket bucket = requestLimitService.resolveBucket(objectType);
+        if (bucket.tryConsume(1)) {
+            String basicObjectMessage = "Basic recyclable object inserted. ";
+
+            recyclingMachineService.insertBasicObject();
+
+            logger.info(basicObjectMessage + recyclingMachineService.getRecycledAmountString());
+            return ResponseEntity.accepted().body(basicObjectMessage);
+        }
+        logger.warn("Recyclable object inserted too fast");
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("You inserted the recyclable object too fast!");
+    }
+
     @GetMapping("/recycledamount")
     @ResponseStatus(code = HttpStatus.OK)
     public String getRecycledAmount() {

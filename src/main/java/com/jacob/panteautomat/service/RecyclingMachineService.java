@@ -2,6 +2,7 @@ package com.jacob.panteautomat.service;
 
 import com.jacob.panteautomat.model.Bottle;
 import com.jacob.panteautomat.model.Can;
+import com.jacob.panteautomat.model.BasicObject;
 import com.jacob.panteautomat.model.VoucherHistory;
 import com.jacob.panteautomat.utils.RecyclableObjects;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class RecyclingMachineService {
     public void insertBottle() {
         recycledObjects.add(new Bottle());
     }
+    public void insertBasicObject() { recycledObjects.add(new BasicObject()); }
 
     public Map<String, Integer> getRecycledAmount() {
         Map<String, Integer> numberOfRecycledObjects = new HashMap();
@@ -39,21 +41,34 @@ public class RecyclingMachineService {
             if (o instanceof Bottle) {
                 numberOfRecycledObjects.put(RecyclableObjects.BOTTLE.getString(), numberOfRecycledObjects.getOrDefault(RecyclableObjects.BOTTLE.getString(), 0) + 1);
             }
+            if (o instanceof BasicObject) {
+                numberOfRecycledObjects.put(RecyclableObjects.BASICOBJECT.getString(), numberOfRecycledObjects.getOrDefault(RecyclableObjects.BASICOBJECT.getString(), 0) + 1);
+            }
         }
         return numberOfRecycledObjects;
     }
 
     public String getRecycledAmountString() {
         Map<String, Integer> numberOfRecycledObjects = getRecycledAmount();
+        String basicObjectAmountString = "";
+        int basicObjectAmount = numberOfRecycledObjects.getOrDefault(RecyclableObjects.BASICOBJECT.getString(), 0);
 
-        return String.format("%d can(s) and %d bottle(s) have been added to the recycling machine.",
+        if(basicObjectAmount != 0) {
+            basicObjectAmountString = String.format("Basic recyclable object(s) inserted: %d. ", basicObjectAmount);
+        }
+
+        String recycledAmountString = String.format("%d can(s) and %d bottle(s) have been added to the recycling machine. ",
                 numberOfRecycledObjects.getOrDefault(RecyclableObjects.CAN.getString(), 0),
                 numberOfRecycledObjects.getOrDefault(RecyclableObjects.BOTTLE.getString(), 0));
+
+        return recycledAmountString + basicObjectAmountString;
     }
+
 
      public int calculateRecycledValue() {
         int totalValueOfCans = 0;
         int totalValueOfBottles = 0;
+        int totalValueOfBasicObjects = 0;
 
         for (Object o: recycledObjects) {
             if (o instanceof Can) {
@@ -62,8 +77,11 @@ public class RecyclingMachineService {
             if (o instanceof Bottle) {
                 totalValueOfBottles += ((Bottle) o).getValue();
             }
+            if (o instanceof BasicObject) {
+                totalValueOfBasicObjects += ((BasicObject) o).getValue();
+            }
         }
-        return totalValueOfCans + totalValueOfBottles;
+        return totalValueOfCans + totalValueOfBottles + totalValueOfBasicObjects;
     }
 
     public String printVoucher() {
@@ -71,7 +89,7 @@ public class RecyclingMachineService {
             logger.warn("User has not added any recycleable objects to the machine!");
             return "You have not added any recycleable objects to the machine!";
         }
-        String voucherText = String.format("%s You will receive a voucher of %d kr!", getRecycledAmountString(), calculateRecycledValue());
+        String voucherText = String.format("%sYou will receive a voucher of %d kr!", getRecycledAmountString(), calculateRecycledValue());
         logger.info("Printed voucher: " + voucherText);
 
         voucherHistory.add(new VoucherHistory(voucherText, new Date()));
