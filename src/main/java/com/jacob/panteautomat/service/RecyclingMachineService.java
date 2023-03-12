@@ -1,10 +1,10 @@
 package com.jacob.panteautomat.service;
 
+import com.jacob.panteautomat.model.BasicObject;
 import com.jacob.panteautomat.model.Bottle;
 import com.jacob.panteautomat.model.Can;
-import com.jacob.panteautomat.model.BasicObject;
 import com.jacob.panteautomat.model.VoucherHistory;
-import com.jacob.panteautomat.utils.RecyclableObjects;
+import com.jacob.panteautomat.utils.RecyclableObjectsConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,13 +36,13 @@ public class RecyclingMachineService {
 
         for (Object o: recycledObjects) {
             if (o instanceof Can) {
-                numberOfRecycledObjects.put(RecyclableObjects.CAN.getString(), numberOfRecycledObjects.getOrDefault(RecyclableObjects.CAN.getString(), 0) + 1);
+                numberOfRecycledObjects.put(RecyclableObjectsConstants.CAN, numberOfRecycledObjects.getOrDefault(RecyclableObjectsConstants.CAN, 0) + 1);
             }
             if (o instanceof Bottle) {
-                numberOfRecycledObjects.put(RecyclableObjects.BOTTLE.getString(), numberOfRecycledObjects.getOrDefault(RecyclableObjects.BOTTLE.getString(), 0) + 1);
+                numberOfRecycledObjects.put(RecyclableObjectsConstants.BOTTLE, numberOfRecycledObjects.getOrDefault(RecyclableObjectsConstants.BOTTLE, 0) + 1);
             }
             if (o instanceof BasicObject) {
-                numberOfRecycledObjects.put(RecyclableObjects.BASICOBJECT.getString(), numberOfRecycledObjects.getOrDefault(RecyclableObjects.BASICOBJECT.getString(), 0) + 1);
+                numberOfRecycledObjects.put(RecyclableObjectsConstants.BASICOBJECT, numberOfRecycledObjects.getOrDefault(RecyclableObjectsConstants.BASICOBJECT, 0) + 1);
             }
         }
         return numberOfRecycledObjects;
@@ -51,15 +51,15 @@ public class RecyclingMachineService {
     public String getRecycledAmountString() {
         Map<String, Integer> numberOfRecycledObjects = getRecycledAmount();
         String basicObjectAmountString = "";
-        int basicObjectAmount = numberOfRecycledObjects.getOrDefault(RecyclableObjects.BASICOBJECT.getString(), 0);
+        int basicObjectAmount = numberOfRecycledObjects.getOrDefault(RecyclableObjectsConstants.BASICOBJECT, 0);
 
         if(basicObjectAmount != 0) {
             basicObjectAmountString = String.format("Basic recyclable object(s) inserted: %d. ", basicObjectAmount);
         }
 
         String recycledAmountString = String.format("%d can(s) and %d bottle(s) have been added to the recycling machine. ",
-                numberOfRecycledObjects.getOrDefault(RecyclableObjects.CAN.getString(), 0),
-                numberOfRecycledObjects.getOrDefault(RecyclableObjects.BOTTLE.getString(), 0));
+                numberOfRecycledObjects.getOrDefault(RecyclableObjectsConstants.CAN, 0),
+                numberOfRecycledObjects.getOrDefault(RecyclableObjectsConstants.BOTTLE, 0));
 
         return recycledAmountString + basicObjectAmountString;
     }

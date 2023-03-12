@@ -1,6 +1,6 @@
 package com.jacob.panteautomat.service;
 
-import com.jacob.panteautomat.utils.RecyclableObjects;
+import com.jacob.panteautomat.utils.RecyclableObjectsConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ public class RecyclingMachineServiceTest {
 
         recyclingMachineService.insertCan();
         for (Map.Entry<String, Integer> recycledObjects: recyclingMachineService.getRecycledAmount().entrySet()) {
-            if (recycledObjects.getKey().equals(RecyclableObjects.CAN.getString())) {
+            if (recycledObjects.getKey().equals(RecyclableObjectsConstants.CAN)) {
                 cans++;
             }
         }
@@ -29,7 +29,7 @@ public class RecyclingMachineServiceTest {
 
         recyclingMachineService.insertBottle();
         for (Map.Entry<String, Integer> recycledObjects: recyclingMachineService.getRecycledAmount().entrySet()) {
-            if (recycledObjects.getKey().equals(RecyclableObjects.BOTTLE.getString())) {
+            if (recycledObjects.getKey().equals(RecyclableObjectsConstants.BOTTLE)) {
                 bottles++;
             }
         }

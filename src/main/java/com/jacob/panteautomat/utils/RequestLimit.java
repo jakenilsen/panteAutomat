@@ -30,9 +30,9 @@ public class RequestLimit {
         public static Type resolveLimitFromRequestHeader(String objectType) {
             if (objectType == null || objectType.isEmpty()) {
                 return BASICOBJECT;
-            }else if (objectType.equals(RecyclableObjects.CAN.getString())) {
+            }else if (objectType.equals(RecyclableObjectsConstants.CAN)) {
                 return CAN;
-            } else if (objectType.equals(RecyclableObjects.BOTTLE.getString())) {
+            } else if (objectType.equals(RecyclableObjectsConstants.BOTTLE)) {
                 return BOTTLE;
             }
             return BASICOBJECT;
