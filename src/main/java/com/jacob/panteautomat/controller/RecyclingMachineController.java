@@ -73,14 +73,21 @@ public class RecyclingMachineController {
     @GetMapping("/printvoucher")
     @ResponseStatus(code = HttpStatus.OK)
     public String printVoucher() {
-        String voucherText = recyclingMachineService.printVoucher();
+        logger.info("printvoucher");
+        return recyclingMachineService.printVoucher();
+    }
 
-        return voucherText;
+    @GetMapping("/lotterychance")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String lotteryChance() {
+        logger.info("lotterychance");
+        return recyclingMachineService.getLotteryTicketString();
     }
 
     @GetMapping("/voucherhistory")
     @ResponseStatus(code = HttpStatus.OK)
     public String getVoucherHistory() {
+        logger.info("voucherhistory");
         return recyclingMachineService.getVoucherHistory();
     }
 }

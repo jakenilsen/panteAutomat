@@ -47,7 +47,4 @@ public class RecyclingMachineServiceTest {
 
         Assertions.assertEquals(expected, recyclingMachineService.calculateRecycledValue());
     }
-
-
-
 }

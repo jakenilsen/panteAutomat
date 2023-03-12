@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RecyclingMachineService {
@@ -87,7 +84,7 @@ public class RecyclingMachineService {
     public String printVoucher() {
         if (calculateRecycledValue() == 0) {
             logger.warn("User has not added any recycleable objects to the machine!");
-            return "You have not added any recycleable objects to the machine!";
+            return "You have not added any valued recyclable objects to the machine!";
         }
         String voucherText = String.format("%sYou will receive a voucher of %d kr!", getRecycledAmountString(), calculateRecycledValue());
         logger.info("Printed voucher: " + voucherText);
@@ -110,5 +107,70 @@ public class RecyclingMachineService {
         }
 
         return voucherHistoryString;
+    }
+
+    public int getLotteryTicket() {
+        int tickets = calculateRecycledValue(); // 1 ticket is 1kr
+        if (calculateRecycledValue() == 0) {
+            return -1;
+        }
+
+        Random random = new Random();
+        ArrayList<Integer> luckyNumbers = new ArrayList<>();
+        List<Integer> prizeMoney = Arrays.asList(10, 20, 50, 100, 1000, 10000, 100000, 1000000);
+        int payout = 0;
+
+        int max = 10000;
+        int min = 1;
+        int range = max - min + 1;
+
+        // adding 5 lucky numbers for the lottery draw
+        for (int i = 0; i<5; i++) {
+            luckyNumbers.add((int) (Math.random() * range) + min);
+        }
+
+        for (int l = 0; l<tickets; l++) {
+            int lotteryNumber  = (int) (Math.random() * range) + min;
+
+            if (luckyNumbers.contains(lotteryNumber)) {
+                payout += prizeMoney.get(random.nextInt(prizeMoney.size()));
+            }
+        }
+
+        return payout;
+    }
+
+    public String getLotteryTicketString() {
+        int payout = getLotteryTicket();
+
+        if (payout == -1) {
+            logger.warn("User has not added any recycleable objects to the machine!");
+            return "You have not added any valued recyclable objects to the machine!";
+        }
+        String voucherText;
+
+        if (payout == 0) {
+            voucherText = String.format("%sNo payout this time, thank you for your donation!", getRecycledAmountString());
+            logger.info("Printed lotteryResults: " + voucherText);
+
+            voucherHistory.add(new VoucherHistory(voucherText, new Date()));
+            logger.info("Added voucher to history");
+
+            recycledObjects.clear();
+            logger.info("Recycling Machine is cleared: " + getRecycledAmountString());
+
+            return voucherText;
+        }
+
+        voucherText = String.format("%sYou won %dkr!", getRecycledAmountString(), payout);
+        logger.info("Printed lotteryResults: " + voucherText);
+
+        voucherHistory.add(new VoucherHistory(voucherText, new Date()));
+        logger.info("Added voucher to history");
+
+        recycledObjects.clear();
+        logger.info("Recycling Machine is cleared: " + getRecycledAmountString());
+
+        return voucherText;
     }
 }
